@@ -1,0 +1,87 @@
+This is an automatic message from your new Fedora server.... $SERVER_FULL_NAME
+
+** Do Not Reply to this message as it will return back to you **
+
+This message is to inform you that your Fedora Commons repository server installation is complete. You should now be able to log into the server and customize it to your specific needs.
+
+Your server has been configured with the following: 
+
+SERVER DETAILS
+---------------------------------------------------
+SERVER NAME: 			$SERVER_NAME
+SERVER FULL NAME:		$SERVER_FULL_NAME
+ADMINISTRATOR USER:  root
+ADMINISTRATOR PASS:  **********   (Please get this password from the product details in the Sly Media Networks support system https://slymedia.net/support)
+ADMINISTRATOR EMAIL:		$ADMIN_EMAIL  (All mail for root is configured to forward to this address. Edit /etc/aliases and run the 'newaliases' command to change it)
+IP ADDRESS:			$IP_ADDR
+
+
+SOFTWARE DETAILS
+---------------------------------------------------
+INSTALLATION DIRECTORY:		$INSTALL_PREFIX
+GSEARCH VERSION:		$GSEARCH_VERSION
+DJATOKA VERSION:		$DJATOKA_VERSION
+SOLR VERSION:			$SOLR_VERSION
+SOLR HOME:			$SOLR_HOME
+JAVA HOME:			$JAVA_HOME
+
+
+Fedora Commons Details
+---------------------------------------------------
+FEDORA VERSION:			$FEDORA_VERSION
+FEDORA HOME:			$FEDORA_HOME
+
+System User login account
+---------------------------------------------------
+( % ssh $FEDORA_USER@$SERVER_FULL_NAME )
+FEDORA USER:			$FEDORA_USER
+FEDORA USER PASSWORD:		$FEDORA_USER_PASS
+
+Fedora Web Administrator Account
+---------------------------------------------------
+( http://$SERVER_FULL_NAME:8080/fedora/admin )
+FEDORA Web ADMIN: 		$FEDORA_ADMIN_USER
+FEDORA Web Admin Password:	$FEDORA_ADMIN_PASS
+
+
+Fedora GSearch Administrator Account
+---------------------------------------------------
+( http://$SERVER_FULL_NAME:8080/fedoragsearch )
+FEDORA GSEARCH USER:		$FEDORA_GSEARCH_ADMIN_USER
+FEDORA GSEARCH ADMIN PASSWORD:	$FEDORA_GSEARCH_ADMIN_PASS
+
+MySQL DB Details
+--------------------------------------------------
+MYSQL ROOT PASSWORD:		$ROOT_MYSQL_PASS
+MYSQL SERVER:			$DB_SERVER
+FEDORA DB NAME:			$FEDORA_DB_NAME
+FEDORA DB USER:			$FEDORA_DB_USER
+FEDORA DB PASSWORD:		$FEDORA_DB_PASS
+
+**Please note that phpMySQL is installed on the server to administer your MySQL databases.
+In order to access it you first need to log into the server as root and edit the phpmyadmin configuration to allow access from your IP address. ( http://$SERVER_FULL_NAME/phpMyAdmin )
+
+Server URL's
+--------------------------------------------------
+
+http://$SERVER_FULL_NAME:8080                # location of Tomcat
+http://$SERVER_FULL_NAME:8080/fedora         # fedora commons
+http://$SERVER_FULL_NAME:8080/fedora/objects         # fedora commons object search
+http://$SERVER_FULL_NAME:8080/fedora/admin         # fedora commons admin
+http://$SERVER_FULL_NAME:8080/fedoragsearch        # fedora gsearch
+http://$SERVER_FULL_NAME:8080/fedoragsearch/rest        # fedora gsearch rest interface
+http://$SERVER_FULL_NAME:8080/solr         # solr indexing
+http://$SERVER_FULL_NAME:8080/djatoka         # djatoka image processor
+http://$SERVER_FULL_NAME:8080/saxon         # saxon xslt processor
+http://$SERVER_FULL_NAME/phpMyAdmin         # MySQL DB administrator interface
+
+Installation Log
+--------------------------------------------------
+A log of the installation process is located at: $INSTALL_LOG
+
+
+***Please save this information for your records***
+
+Thank you for doing business with Sly Media Networks, LLC. 
+If you run into any issues or need help please contact our support staff.  ( https://slymedia.net/contact )
+
