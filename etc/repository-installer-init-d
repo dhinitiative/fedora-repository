@@ -28,7 +28,7 @@ configure-ip()
     #        change the venet0:0 to whatever is on your machine (ie. eth0). 
     #
     #IPADDR=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`;
-    IPADDR=`hostname -I`;
+    IPADDR=`hostname -i`;
     sed -i "s|xxx\.xxx\.xxx\.xxx|${IPADDR}|g" /opt/fedora-repository/installer.sh
     return 0;
 }
