@@ -24,10 +24,10 @@ export SERVER_FULL_NAME=`hostname -f`                   # set server full name
 export ADMIN_EMAIL='youremail@domain.com'               # enter your email address to get messages from the server
 export INSTALL_PREFIX=`pwd`
 export INSTALL_DIR=/opt
-export WEB_ROOT=/var/www/html
+#export WEB_ROOT=/var/www/html
 export IP_ADDR="xxx.xxx.xxx.xxx"                        # IP address of this server (ifconfig -a). 
-export SITES_ALL_MODULES=$WEB_ROOT/sites/all/modules
-export SITES_ALL_LIB=$WEB_ROOT/sites/all/libraries
+#export SITES_ALL_MODULES=$WEB_ROOT/sites/all/modules
+#export SITES_ALL_LIB=$WEB_ROOT/sites/all/libraries
 export FEDORA_VERSION="3.8"                             # Valid versions 3.5 and 3.8
 export SOLR_VERSION="4.2.0"                             # Valid versions 3.6.2 and 4.2.0
 export GSEARCH_VERSION="2.6"	                        # Valid versions 2.4.2 and 2.6
@@ -88,16 +88,6 @@ cd $REPOSITORY_HOME/sbin
 #
 #---------------------------------------------
 #
-#script -ac ./software_dependencies.install ${INSTALL_LOG} &&
-#script -ac ./apache.install ${INSTALL_LOG} &&
-#script -ac ./mysql.install ${INSTALL_LOG} &&
-#script -ac ./fedora.install ${INSTALL_LOG} &&
-#script -ac ./gsearch.install ${INSTALL_LOG} &&
-#script -ac ./solr.install ${INSTALL_LOG} &&
-#script -ac ./djatoka.install ${INSTALL_LOG} &&
-#script -ac ./set_permissions.sh ${INSTALL_LOG}
-
-
 ./software_dependencies.install; ./apache.install; ./mysql.install; ./fedora.install; ./gsearch.install; ./solr.install; ./djatoka.install; ./set_permissions.sh
 
 if [ $INSTALL_CSF == "Yes" ]; then
