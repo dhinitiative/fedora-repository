@@ -40,7 +40,7 @@ export FEDORA_USER_PASS='fedora2014'
 export REPOSITORY_HOME=$INSTALL_PREFIX
 export SOLR_HOME=$INSTALL_PREFIX/solr
 export JAVA_HOME=${INSTALL_PREFIX}/java
-export DOC_ROOT=/var/www/html
+#export DOC_ROOT=/var/www/html
 #
 ## Variables to be passed to database.sh
 #
