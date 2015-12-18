@@ -13,7 +13,7 @@
 #
 # install packages
 #
-yum install -y mysql mysqld php php-mbstring php-gd php-mysqli mariadb-server
+yum install -y mysql php php-mbstring php-gd php-mysqli mariadb-server
 
 #
 # Make sure it's running at boot
