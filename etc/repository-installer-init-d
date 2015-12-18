@@ -27,7 +27,7 @@ configure-ip()
     # Note: the following variable will need to be updated for the type of ethernet interface on your host. 
     #        change the venet0:0 to whatever is on your machine (ie. eth0). 
     #
-    IPADDR=`ifconfig -a venet0:0 | grep inet | awk '{print $2}' | awk -F: '{print $2}'`;
+    IPADDR=`ifconfig ens160 | grep inet | awk '{print $2}' | head -1`;
     sed -i "s|xxx\.xxx\.xxx\.xxx|${IPADDR}|g" /opt/fedora-repository/installer.sh
     return 0;
 }
