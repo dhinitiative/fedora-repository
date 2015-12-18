@@ -1,0 +1,7 @@
+This is the sbin directory. 
+
+This is where all the scripts that are run for the fedora commons installation process. 
+
+If you write your own scripts moving forward you should place them in
+
+../bin instead of putting them in here (sbin). 

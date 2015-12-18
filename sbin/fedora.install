@@ -1,0 +1,195 @@
+#!/bin/bash -x
+
+#
+# Script to automatically Fedora Commons
+#
+
+#
+#
+# Source environment
+. ../etc/env.sh
+. ../etc/database.sh
+
+#
+# Variables for script
+#
+install_properties_file="install.properties-fedora"
+#
+# If this is a rerun of this script on an already installed machine then
+# Drop DB first or you'll have problems with drupal-filter. 
+#
+#mysqladmin -f -h $DB_SERVER -u $FEDORA_DB_USER -p$FEDORA_DB_PASS drop $FEDORA_DB_NAME
+#
+## Create Fedora DB and user
+#
+mysql -u root -p$ROOT_MYSQL_PASS -e "create database $FEDORA_DB_NAME; GRANT ALL PRIVILEGES ON $FEDORA_DB_NAME.* TO $FEDORA_DB_USER@localhost IDENTIFIED BY '$FEDORA_DB_PASS'"
+
+if [ $FEDORA_VERSION == "3.8" ]; then
+  #
+  # Install Fedora Commons 3.8
+  #
+ 
+  ## get software
+  #wget -N -P $SRC_DIR http://downloads.sourceforge.net/fedora-commons/fcrepo-installer-3.8.0.jar
+  wget -N -P $SRC_DIR http://downloads.sourceforge.net/project/fedora-commons/fedora/3.8.1/fcrepo-installer-3.8.1.jar
+  cd $SRC_DIR
+  #
+  ## create install.properties
+  #
+  cp ../etc/install.properties-fedora $install_properties_file
+  sed -i "s/ENTER_DATE/`date`/" $install_properties_file
+  sed -i "s/DATABASE_SERVER_TO_CHANGE/$DB_SERVER/g" $install_properties_file
+  sed -i "s/DATABASE_NAME_TO_CHANGE/$FEDORA_DB_NAME/g" $install_properties_file
+  sed -i "s/DATABASE_PASSWORD_TO_CHANGE/$FEDORA_DB_PASS/g" $install_properties_file
+  sed -i "s/DATABASE_USER_TO_CHANGE/$FEDORA_DB_USER/g" $install_properties_file
+  sed -i "s|CATALINA_HOME_TO_CHANGE|$CATALINA_HOME|g" $install_properties_file
+  sed -i "s|FEDORA_HOME_TO_CHANGE|$FEDORA_HOME|g" $install_properties_file
+  sed -i "s/FEDORA_ADMIN_PASS_TO_CHANGE/$FEDORA_ADMIN_PASS/g" $install_properties_file
+  #
+  ## Fresh fedora commons install
+  #
+  #${JAVA_HOME}/bin/java -jar fcrepo-installer-3.8.0.jar $install_properties_file
+  ${JAVA_HOME}/bin/java -jar fcrepo-installer-3.8.1.jar $install_properties_file
+  
+  #
+  # Edit fedora describe page
+  # After version 3.6 fedora configuration has changed per:
+  # https://wiki.duraspace.org/display/FEDORA36/Spring+Configuration
+  #
+	#sed -i "s/value\=\"localhost\"/value\=\"$SERVER_FULL_NAME\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml
+	#sed -i "s/value\=\"bob\@example\.org sally\@example\.org\"/value\=\"$ADMIN_EMAIL\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml 
+	# 
+	# Update datastore structure in $FEDORA_HOME/server/config/spring/akubra-llstore.xml
+	#
+	# change  <constructor-arg value="##" /> to <constructor-arg value=“##/##/##” /> for fsObjectStoreMapper and fsDatastreamStoreMapper
+	sed -i "s/constructor-arg value\=\"\#\#\"/constructor-arg value\=\"\#\#\/\#\#\/\#\#\"/g" $FEDORA_HOME/server/config/spring/akubra-llstore.xml
+fi
+
+
+
+#
+# set permissions
+# 
+chown -R $FEDORA_USER:$FEDORA_USER $FEDORA_HOME
+
+#
+# set up a system startup init.d script to start fedora at boot
+#
+cp $REPOSITORY_HOME/etc/init.d-fedora /etc/init.d/fedora
+chown root:root /etc/init.d/fedora
+chmod 755 /etc/init.d/fedora
+chkconfig --add fedora
+chkconfig fedora on
+
+# 
+# Start Fedora to get things populated
+#
+#$CATALINA_HOME/bin/startup.sh
+service fedora start
+sleep 300
+service fedora stop
+
+if [ $FEDORA_VERSION == "3.8" ]; then
+  #
+  # Edit fedora describe page
+  # After version 3.6 fedora configuration has changed per:
+  # https://wiki.duraspace.org/display/FEDORA36/Spring+Configuration
+  #
+	sed -i "s/value\=\"localhost\"/value\=\"$SERVER_FULL_NAME\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml
+	sed -i "s/value\=\"bob\@example\.org sally\@example\.org\"/value\=\"$ADMIN_EMAIL\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml 
+	#sed -i "s/name\=\"httpClientMaxConnectionsPerHost\" value\=\"5\"/name\=\"httpClientMaxConnectionsPerHost\" value\=\"25\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml
+	#sed -i "s/name\=\"indexDCFields\" value\=\"true\"/name\=\"indexDCFields\" value\=\"false\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml
+	#sed -i "s/autoChecksum\" value=\"false/autoChecksum\" value=\"true/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml
+fi 
+#
+# get drupal_filter
+#
+# deploy from github at https://github.com/Islandora/islandora_drupal_filter.git
+# wget --no-check-certificate "https://github.com/Islandora/islandora_drupal_filter/raw/release/bin/fcrepo-drupalauthfilter-3.4.2.jar"
+wget -N -P $SRC_DIR http://islandora.ca/sites/default/files/12.1.0/drupal_filter.tar.gz
+cd $SRC_DIR
+tar -zxvf drupal_filter.tar.gz
+mv bin drupal_filter
+#
+# add drupal filter
+#
+# for 3.6.2 jar do this
+#cd $CATALINA_HOME/webapps/fedora/WEB-INF/lib
+#wget --no-check-certificate https://github.com/Islandora/islandora_tomcat/raw/3.6.2/webapps/fedora/WEB-INF/lib/fcrepo-drupalauthfilter-3.6.2.jar
+#
+cp drupal_filter/fcrepo-drupalauthfilter-3.4.2.jar ${FEDORA_HOME}/tomcat/webapps/fedora/WEB-INF/lib/
+
+#
+# set up jaas.conf 
+#
+mv ${FEDORA_HOME}/server/config/jaas.conf ${FEDORA_HOME}/server/config/jaas.conf-orig
+cp drupal_filter/jaas.conf ${FEDORA_HOME}/server/config/jaas.conf
+
+#
+# install filter config
+#
+cp ../etc/filter-drupal.xml $SRC_DIR/filter-drupal.xml
+#sed -i "s/DATABASE_SERVER_TO_CHANGE/$DB_SERVER/g" $SRC_DIR/filter-drupal.xml
+#sed -i "s/DRUPAL_DB_NAME_TO_CHANGE/$DRUPAL_DB_NAME/g" $SRC_DIR/filter-drupal.xml
+#sed -i "s/DRUPAL_DB_PASSWORD_TO_CHANGE/$DRUPAL_DB_PASS/g" $SRC_DIR/filter-drupal.xml
+#sed -i "s/DRUPAL_DB_USER_TO_CHANGE/$DRUPAL_DB_USER/g" $SRC_DIR/filter-drupal.xml
+#sed -i "s/DRUPAL_DB_PREFIX_TO_CHANGE/$DRUPAL_DB_PREFIX/g" $SRC_DIR/filter-drupal.xml
+cp $SRC_DIR/filter-drupal.xml ${FEDORA_HOME}/server/config/filter-drupal.xml
+
+#
+# Change XACML policies
+#
+rm -f ${FEDORA_HOME}/data/fedora-xacml-policies/repository-policies/default/deny-purge-*
+rm -f ${FEDORA_HOME}/data/fedora-xacml-policies/repository-policies/default/deny-apim-if-not-localhost.xml
+
+#
+# Copy islandora policies
+#
+# cp $WEB_ROOT/sites/all/modules/islandora-7.x-1.2/policies/permit-* ${FEDORA_HOME}/data/fedora-xacml-policies/repository-policies/islandora
+cd ${FEDORA_HOME}/data/fedora-xacml-policies/repository-policies
+git clone https://github.com/Islandora/islandora-xacml-policies.git
+
+#
+# Remove tomcat examples for security
+#
+rm -rf ${CATALINA_HOME}/webapps/examples
+
+#
+# Configure tomcat users
+#
+# edit $FEDORA_HOME/tomcat/conf/tomcat-users.xml and replace </tomcat-users> with 
+#  sed -i "s/</tomcat-users>/<user username="$FEDORA_ADMIN_USER" password="$FEDORA_ADMIN_PASS" roles="manager,admin-gui,manager-gui"/>/g $CATALINA_HOME/conf/tomcat-users.xml
+#  echo >> "</tomcat-users>" >> $CATALAINA_HOME/conf/tomcat-users.xml
+
+#
+# Enable CORS (Cross Origin Resource Sharing)
+# from (https://www.dforge.net/2013/09/16/enabling-cors-on-apache-tomcat-6/)
+#
+cd $CATALINA_HOME/lib
+wget -O cors-filter-2.3.jar http://search.maven.org/remotecontent?filepath=com/thetransactioncompany/cors-filter/2.3/cors-filter-2.3.jar
+wget -O java-property-utils-1.9.jar http://search.maven.org/remotecontent?filepath=com/thetransactioncompany/java-property-utils/1.9/java-property-utils-1.9.jar
+sed -i "s|</web-app>|<filter>|g" $CATALINA_HOME/conf/web.xml
+echo "<filter-name>CORS</filter-name>" >> $CATALINA_HOME/conf/web.xml
+echo "<filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>" >> $CATALINA_HOME/conf/web.xml
+echo "</filter>" >> $CATALINA_HOME/conf/web.xml
+echo "<filter-mapping>" >> $CATALINA_HOME/conf/web.xml
+echo "<filter-name>CORS</filter-name>" >> $CATALINA_HOME/conf/web.xml
+echo "<url-pattern>/*</url-pattern>" >> $CATALINA_HOME/conf/web.xml
+echo "</filter-mapping>" >> $CATALINA_HOME/conf/web.xml
+echo "</web-app>" >> $CATALINA_HOME/conf/web.xml
+
+#
+# change the memory requirements for the fedora client commands
+#
+sed -i 's|-Xms64m|-Xms1024m|g' ${FEDORA_HOME}/client/bin/env-client.sh
+sed -i 's|-Xmx96m|-Xmx2048m|g' ${FEDORA_HOME}/client/bin/env-client.sh
+#
+# set permissions
+# 
+chown -R $FEDORA_USER:$FEDORA_USER $FEDORA_HOME
+
+#
+# Start fedora 
+#
+service fedora start
+sleep 300

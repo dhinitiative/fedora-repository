@@ -1,0 +1,98 @@
+#!/bin/bash -x
+#
+# Source environment
+#
+. ../etc/env.sh
+. ../etc/database.sh
+
+if [ $SOLR_VERSION == "4.2.0" ]; then
+  #
+  # stop fedora 
+  #
+  service fedora stop
+  #
+  # install Solr 4.2.0
+  #
+  cd $SRC_DIR
+  wget -N -P $SRC_DIR https://archive.apache.org/dist/lucene/solr/4.2.0/solr-4.2.0.tgz
+  tar -zxvf solr-4.2.0.tgz
+  chown -R $FEDORA_USER:$FEDORA_USER solr-4.2.0
+  cp solr-4.2.0/dist/solr-4.2.0.war ${CATALINA_HOME}/webapps/solr.war
+  cp -r solr-4.2.0/example/solr $SOLR_HOME
+  sed -i "s|localhost|$SERVER_FULL_NAME|g" $SOLR_HOME/collection1/conf/scripts.conf
+  #
+  # Secure the solr admin interface 
+  #  (from http://www.sphinxconsultant.com/secure-solr-admin-interface-tomcat)
+  #
+   #
+   # Add new user to ${CATALINA_HOME}/conf/tomcat-users.xml
+   #
+   sed -i "s|</tomcat-users>|<!– for Solr –>|g" ${CATALINA_HOME}/conf/tomcat-users.xml
+   echo "<role rolename="solr_manager_role"/>" >> ${CATALINA_HOME}/conf/tomcat-users.xml
+   echo "<user username="$FEDORA_ADMIN_USER" password="$FEDORA_ADMIN_PASS" roles="solr_manager_role"/>" >> ${CATALINA_HOME}/conf/tomcat-users.xml
+   echo "</tomcat-users>" >> ${CATALINA_HOME}/conf/tomcat-users.xml
+  #
+  # start fedora to load the war so we can configure it. 
+  #
+  service fedora start
+  sleep 300   # wait for war to load in fedora
+  #
+  # Grab basic_solr_config
+  #
+  git clone  https://github.com/discoverygarden/basic-solr-config.git
+  sed -i "s/localhost/$SERVER_FULL_NAME/g" basic-solr-config/foxmlToSolr.xslt
+  sed -i "s/localhost/$SERVER_FULL_NAME/g" basic-solr-config/index.properties
+  rm basic-solr-config/README.md
+  chown -R $FEDORA_USER:$FEDORA_USER basic-solr-config
+  cp basic-solr-config/foxmlToSolr.xslt ${CATALINA_HOME}/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/
+  cp -r basic-solr-config/islandora_transforms ${CATALINA_HOME}/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/
+fi
+#
+# install web.xml
+#
+mv ${FEDORA_HOME}/tomcat/webapps/solr/WEB-INF/web.xml ${FEDORA_HOME}/tomcat/webapps/solr/WEB-INF/web.xml-orig
+chown $FEDORA_USER:$FEDORA_USER ../etc/solr-web.xml-$SOLR_VERSION
+cp ../etc/solr-web.xml-$SOLR_VERSION ${FEDORA_HOME}/tomcat/webapps/solr/WEB-INF/web.xml
+
+
+#
+# setup solr schema
+#
+if [ $SOLR_VERSION == "3.6.2" ]; then
+  if [ $GSEARCH_VERSION == "2.4.2" ]; then
+    mv $SOLR_HOME/conf/schema.xml $SOLR_HOME/conf/schema.bak
+    cp ${FEDORA_HOME}/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/conf/schema-3.6.0-for-fgs-2.4.2.xml $SOLR_HOME/conf/schema.xml
+  
+  else
+     echo "GSEARCH 2.4.2 isn't installed."
+  fi
+fi
+if [ $SOLR_VERSION == "4.2.0" ]; then
+  if [ $GSEARCH_VERSION == "2.6" ]; then
+    mv $SOLR_HOME/collection1/conf/schema.xml $SOLR_HOME/collection1/conf/schema.bak
+    cp ${FEDORA_HOME}/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/conf/schema-4.2.0-for-fgs-2.6.xml $SOLR_HOME/collection1/conf/schema.xml
+  else
+    echo "GSEARCH 2.6 isn't installed."
+  fi
+fi
+
+#
+# Setup context file for fedora
+#
+if [ $SOLR_VERSION == "4.2.0" ]; then
+#     echo "<?xml version="1.0" encoding="UTF-8"?>" > $CATALINA_HOME/conf/Catalina/localhost/solr.xml
+#     echo "<Context docBase="$CATALINA_HOME/webapps/solr.war" debug="0" crossContext="true">" >> $CATALINA_HOME/conf/Catalina/localhost/solr.xml
+#      echo "<Environment name="solr/home" type="java.lang.String" value="$SOLR_HOME" override="true"/>" >> $CATALINA_HOME/conf/Catalina/localhost/solr.xml
+#      echo "</Context>" >> $CATALINA_HOME/conf/Catalina/localhost/solr.xml
+    cd $SRC_DIR
+    sed -i "s|CATALINA_HOME_TO_CHANGE|${CATALINA_HOME}|g" ../etc/solr.xml
+    sed -i "s|SOLR_HOME_TO_CHANGE|${SOLR_HOME}|g" ../etc/solr.xml
+    cp ../etc/solr.xml $CATALINA_HOME/conf/Catalina/localhost/solr.xml
+fi
+
+
+# Setup Solr logging
+#
+#mv $CATALINA_HOME/webapps/solr/WEB-INF/classes/log4j.properties $CATALINA_HOME/webapps/solr/WEB-INF/classes/log4j.properties-orig
+#mkdir -p $CATALINA_HOME/webapps/solr/WEB-INF/classes
+#cp ../etc/log4j.properties-solr $CATALINA_HOME/webapps/solr/WEB-INF/classes/log4j.properties

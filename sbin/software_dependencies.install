@@ -1,0 +1,74 @@
+#!/bin/bash -x
+#
+# Script to install software that are dependancies
+#
+
+
+# Source environment
+. ../etc/env.sh
+
+#
+# Install any other packages on the OS if needed
+#
+# yum -y install <package_name>-<package-version>
+#
+yum -y install gcc gcc-c++ autoconf automake libtool make nasm pkgconfig zlib-devel ImageMagick ghostscript ant git unzip freetype-devel file
+#
+# create fedora user account
+#
+groupadd -r $FEDORA_USER
+useradd -c 'fedora user account' -g $FEDORA_USER -d $REPOSITORY_HOME -M -r -s /bin/bash $FEDORA_USER
+usermod -G fedora apache
+echo "Be sure to set the password for the fedora user (passwd ${FEDORA_USER})." > /etc/motd
+echo "" >> /etc/motd
+#
+# set permission on INSTALL_DIR
+#
+chmod 775 $INSTALL_DIR
+
+if [ ! -d $SRC_DIR ]
+then
+	mkdir -p $SRC_DIR
+fi
+
+if [ ! -d $INSTALL_PREFIX/lib ]
+then
+        mkdir -p $INSTALL_PREFIX/lib
+fi
+if [ ! -d $INSTALL_PREFIX/share ]
+then
+        mkdir -p $INSTALL_PREFIX/share
+fi
+
+#
+# Install Java
+#
+if [ ! -d $INSTALL_PREFIX/jdk1.8.0_40 ]
+then 
+	cd $INSTALL_PREFIX
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u40-b26/server-jre-8u40-linux-x64.tar.gz"
+	tar -zxvf server-jre-8u40-linux-x64.tar.gz
+	ln -s jdk1.8.0_40 java
+	alternatives --install /usr/bin/java java $INSTALL_PREFIX/jdk1.8.0_40/bin/java 3
+	echo "" >> /etc/motd
+	echo "run the command "alternatives --config java" and set it for java 8" >> /etc/motd
+	rm -f server-jre-8u40-linux-x64.tar.gz
+else
+	echo "Java 8 is already installed!"
+fi
+#
+# Enable EPEL
+#
+rpm -ivh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+#
+# Enable RPM Fusion Repo
+#
+rpm -ivh http://download1.rpmfusion.org/free/el/updates/6/i386/rpmfusion-free-release-6-1.noarch.rpm
+#
+# install software
+#
+#yum -y install ffmpeg
+#yum -y install xpdf yasm lame lame-libs gdisk gettext libtool
+yum -y install gdisk libtheora libtheora-devel
+
+cd $SRC_DIR
