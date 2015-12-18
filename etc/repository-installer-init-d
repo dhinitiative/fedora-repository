@@ -21,18 +21,6 @@ start()
     return 0;
 }
 
-configure-ip()
-{
-    #
-    # Note: the following variable will need to be updated for the type of ethernet interface on your host. 
-    #        change the venet0:0 to whatever is on your machine (ie. eth0). 
-    #
-    #IPADDR=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`;
-    IPADDR=`hostname -i`;
-    sed -i "s|xxx\.xxx\.xxx\.xxx|${IPADDR}|g" /opt/fedora-repository/installer.sh
-    return 0;
-}
-
 configure-email()
 {
     sed -i "s|youremail@domain.com|<REPLACE WITH YOUR EMAIL>|g" /opt/fedora-repository/installer.sh
@@ -85,7 +73,6 @@ case "$1" in
         echo $"Installing fedora-repository software in /opt.... "
     install-software
     start
-    configure-ip
     configure-email
     create-fuser-password
     create-fedoradbpass
