@@ -25,5 +25,5 @@ cp ../etc/saxon-web.xml ${FEDORA_HOME}/tomcat/webapps/saxon/WEB-INF/web.xml
 # Setup Saxon logging
 #
 #mv $CATALINA_HOME/webapps/solr/WEB-INF/classes/log4j.properties $CATALINA_HOME/webapps/solr/WEB-INF/classes/log4j.properties-orig
-mkdir -p $CATALINA_HOME/webapps/solr/WEB-INF/classes
-cp ../etc/log4j.properties-solr $CATALINA_HOME/webapps/solr/WEB-INF/classes/log4j.properties
+#mkdir -p $CATALINA_HOME/webapps/solr/WEB-INF/classes
+#cp ../etc/log4j.properties-solr $CATALINA_HOME/webapps/solr/WEB-INF/classes/log4j.properties
