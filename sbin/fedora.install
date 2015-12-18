@@ -22,7 +22,8 @@ install_properties_file="install.properties-fedora"
 #
 ## Create Fedora DB and user
 #
-mysql -u root -p$ROOT_MYSQL_PASS -e "create database $FEDORA_DB_NAME; GRANT ALL PRIVILEGES ON $FEDORA_DB_NAME.* TO $FEDORA_DB_USER@localhost IDENTIFIED BY '$FEDORA_DB_PASS'"
+#mysql -u root -p$ROOT_MYSQL_PASS -e "create database $FEDORA_DB_NAME; GRANT ALL PRIVILEGES ON $FEDORA_DB_NAME.* TO $FEDORA_DB_USER@localhost IDENTIFIED BY '$FEDORA_DB_PASS'"
+mysql -u root -e "create database $FEDORA_DB_NAME; GRANT ALL PRIVILEGES ON $FEDORA_DB_NAME.* TO $FEDORA_DB_USER@localhost IDENTIFIED BY '$FEDORA_DB_PASS'"
 
 if [ $FEDORA_VERSION == "3.8" ]; then
   #
@@ -30,7 +31,6 @@ if [ $FEDORA_VERSION == "3.8" ]; then
   #
  
   ## get software
-  #wget -N -P $SRC_DIR http://downloads.sourceforge.net/fedora-commons/fcrepo-installer-3.8.0.jar
   wget -N -P $SRC_DIR http://downloads.sourceforge.net/project/fedora-commons/fedora/3.8.1/fcrepo-installer-3.8.1.jar
   cd $SRC_DIR
   #
@@ -48,7 +48,6 @@ if [ $FEDORA_VERSION == "3.8" ]; then
   #
   ## Fresh fedora commons install
   #
-  #${JAVA_HOME}/bin/java -jar fcrepo-installer-3.8.0.jar $install_properties_file
   ${JAVA_HOME}/bin/java -jar fcrepo-installer-3.8.1.jar $install_properties_file
   
   #
@@ -56,12 +55,13 @@ if [ $FEDORA_VERSION == "3.8" ]; then
   # After version 3.6 fedora configuration has changed per:
   # https://wiki.duraspace.org/display/FEDORA36/Spring+Configuration
   #
+  	sed -i "s/value\=\"localhost\"/value\=\"$SERVER_FULL_NAME\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml
+	sed -i "s/value\=\"bob\@example\.org sally\@example\.org\"/value\=\"$ADMIN_EMAIL\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml 
 	#sed -i "s/value\=\"localhost\"/value\=\"$SERVER_FULL_NAME\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml
 	#sed -i "s/value\=\"bob\@example\.org sally\@example\.org\"/value\=\"$ADMIN_EMAIL\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml 
 	# 
 	# Update datastore structure in $FEDORA_HOME/server/config/spring/akubra-llstore.xml
 	#
-	# change  <constructor-arg value="##" /> to <constructor-arg value=“##/##/##” /> for fsObjectStoreMapper and fsDatastreamStoreMapper
 	sed -i "s/constructor-arg value\=\"\#\#\"/constructor-arg value\=\"\#\#\/\#\#\/\#\#\"/g" $FEDORA_HOME/server/config/spring/akubra-llstore.xml
 fi
 
@@ -89,18 +89,6 @@ service fedora start
 sleep 300
 service fedora stop
 
-if [ $FEDORA_VERSION == "3.8" ]; then
-  #
-  # Edit fedora describe page
-  # After version 3.6 fedora configuration has changed per:
-  # https://wiki.duraspace.org/display/FEDORA36/Spring+Configuration
-  #
-	sed -i "s/value\=\"localhost\"/value\=\"$SERVER_FULL_NAME\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml
-	sed -i "s/value\=\"bob\@example\.org sally\@example\.org\"/value\=\"$ADMIN_EMAIL\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml 
-	#sed -i "s/name\=\"httpClientMaxConnectionsPerHost\" value\=\"5\"/name\=\"httpClientMaxConnectionsPerHost\" value\=\"25\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml
-	#sed -i "s/name\=\"indexDCFields\" value\=\"true\"/name\=\"indexDCFields\" value\=\"false\"/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml
-	#sed -i "s/autoChecksum\" value=\"false/autoChecksum\" value=\"true/g" $CATALINA_HOME/webapps/fedora/WEB-INF/applicationContext.xml
-fi 
 #
 # get drupal_filter
 #
@@ -145,7 +133,6 @@ rm -f ${FEDORA_HOME}/data/fedora-xacml-policies/repository-policies/default/deny
 #
 # Copy islandora policies
 #
-# cp $WEB_ROOT/sites/all/modules/islandora-7.x-1.2/policies/permit-* ${FEDORA_HOME}/data/fedora-xacml-policies/repository-policies/islandora
 cd ${FEDORA_HOME}/data/fedora-xacml-policies/repository-policies
 git clone https://github.com/Islandora/islandora-xacml-policies.git
 
