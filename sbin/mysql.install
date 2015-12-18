@@ -1,0 +1,54 @@
+#!/bin/bash -x
+#
+# Script to automatically install mysql
+#
+
+
+#
+#
+# Source environment
+. ../etc/env.sh
+. ../etc/database.sh
+
+#
+# install packages
+#
+yum install -y mysql mysqld mysql-server php php-mbstring php-gd php-mysqli
+
+#
+# Make sure it's running at boot
+#
+chkconfig mysqld on
+service mysqld start
+sleep 20
+service mysqld stop
+#
+# configure mysql
+#
+## Change root account
+#
+#/usr/bin/mysqladmin -u root -h $DB_SERVER password '$ROOT_MYSQL_PASS'
+echo "UPDATE mysql.user SET Password=PASSWORD('$ROOT_MYSQL_PASS') WHERE User='root';" > /tmp/mysql_init
+echo "FLUSH PRIVILEGES;" >> /tmp/mysql_init
+/usr/bin/mysqld_safe --init-file=/tmp/mysql_init &
+sleep 20
+service mysqld stop
+rm -f /tmp/mysql_init
+#
+# Make sure it's running
+#
+service mysqld start
+
+#
+# Remind to execute /usr/bin/mysql_secure_installation
+#
+echo "" >> /etc/motd
+echo "Please run /usr/bin/mysql_secure_installation" >> /etc/motd
+echo "and then remove this reminder from /etc/motd" >> /etc/motd
+
+
+#
+# Install EPEL phpMyAdmin via yum
+#
+yum install -y phpMyAdmin
+

@@ -1,0 +1,104 @@
+#!/bin/bash -x
+
+#
+# Script to automatically Fedora Commons
+#
+
+#
+# Source environment
+#
+. ../etc/env.sh
+. ../etc/database.sh
+
+if [ $GSEARCH_VERSION == "2.6" ]; then
+  #
+  # install fedora gsearch 2.6
+  #
+  wget -N -P $SRC_DIR  http://downloads.sourceforge.net/fedora-commons/fedoragsearch-2.6.zip
+  cd $SRC_DIR
+  unzip fedoragsearch-2.6.zip
+  chown -R $FEDORA_USER:$FEDORA_USER fedoragsearch-2.6
+  cp fedoragsearch-2.6/fedoragsearch.war ${FEDORA_HOME}/tomcat/webapps/
+  sleep 300   # wait for war file to load in tomcat
+fi
+
+#
+# Install Gsearch user
+#
+mv ${FEDORA_HOME}/server/config/fedora-users.xml ${FEDORA_HOME}/server/config/fedora-users.xml-orig
+# modify the values to reflect this installation with sed
+sed -i s/FEDORA_ADMIN_USER_TO_CHANGE/$FEDORA_ADMIN_USER/g ../etc/fedora-users.xml
+sed -i s/FEDORA_ADMIN_PASSWORD_TO_CHANGE/$FEDORA_ADMIN_PASS/g ../etc/fedora-users.xml
+sed -i s/changeme/$FEDORA_ADMIN_PASS/g ../etc/fedora-users.xml
+sed -i s/FEDORA_GSEARCH_ADMIN_USER_TO_CHANGE/$FEDORA_GSEARCH_ADMIN_USER/g ../etc/fedora-users.xml
+sed -i s/FEDORA_GSEARCH_ADMIN_PASS_TO_CHANGE/$FEDORA_GSEARCH_ADMIN_PASS/g ../etc/fedora-users.xml
+# install config file
+chown $FEDORA_USER:$FEDORA_USER ../etc/fedora-users.xml
+cp ../etc/fedora-users.xml ${FEDORA_HOME}/server/config/
+
+#
+# set up Gsearch
+#
+# modify the values to reflect this installation with sed
+cd $SRC_DIR
+sed -i s/FGSADMIN_USER_TO_CHANGE/$FEDORA_GSEARCH_ADMIN_USER/g ../etc/fgsconfig-basic.properties-$GSEARCH_VERSION
+sed -i s/FGSADMIN_PASS_TO_CHANGE/$FEDORA_GSEARCH_ADMIN_PASS/g ../etc/fgsconfig-basic.properties-$GSEARCH_VERSION
+sed -i "s|FEDORA_HOME_TO_CHANGE|$FEDORA_HOME|g" ../etc/fgsconfig-basic.properties-$GSEARCH_VERSION
+sed -i s/FEDORA_ADMIN_USER_TO_CHANGE/$FEDORA_ADMIN_USER/g ../etc/fgsconfig-basic.properties-$GSEARCH_VERSION
+sed -i s/FEDORA_ADMIN_PASS_TO_CHANGE/$FEDORA_ADMIN_PASS/g ../etc/fgsconfig-basic.properties-$GSEARCH_VERSION
+sed -i "s|localhost|$SERVER_FULL_NAME|g" ../etc/fgsconfig-basic.properties-$GSEARCH_VERSION
+# install the config file
+chown $FEDORA_USER:$FEDORA_USER ../etc/fgsconfig-basic.properties-$GSEARCH_VERSION
+cp ../etc/fgsconfig-basic.properties-$GSEARCH_VERSION $FEDORA_HOME/tomcat/webapps/fedoragsearch/FgsConfig/fgsconfig-basic.properties
+#
+# build config
+#
+cd $FEDORA_HOME/tomcat/webapps/fedoragsearch/FgsConfig/
+#
+# unset the JAVA home which is set for jdk-1.8 which then allows this to run as the system java 1.6 
+# ant wont build with oracle java 1.8. 
+unset JAVA_HOME
+unset JRE_HOME
+#
+# now build it
+#
+ant -f fgsconfig-basic.xml
+chown -R $FEDORA_USER:$FEDORA_USER $FEDORA_HOME
+
+# from gsearch admin page: you may edit it in repositoryInfo.xml, 
+# and it is displayed by the getRepositoryInfo operation with the 
+# adminGetRepositoryInfoToHtml.xslt stylesheet.
+#
+# Need to update this information
+# AdminInfo	The contents of this page is just an example, you may edit it in repositoryInfo.xml, and it is displayed by the getRepositoryInfo operation with the adminGetRepositoryInfoToHtml.xslt stylesheet.
+# RepositoryShortName	REPOSNAME
+# RepositoryLongName	Repository for REPOSNAME configuration
+# RepositoryDeveloper	Gert Schmeltz Pedersen, DTIC@DTU
+# RepositoryContact	gsp@dtic.dtu.dk
+
+
+#
+# install Maven
+#
+  wget -N -P $SRC_DIR  http://mirror.olnevhost.net/pub/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz
+  cd $SRC_DIR
+  tar -zxvf apache-maven-3.2.5-bin.tar.gz
+  chown -R $FEDORA_USER:$FEDORA_USER apache-maven-3.2.5
+  mv apache-maven-3.2.5 ${REPOSITORY_HOME}/packages
+  ln -s ${REPOSITORY_HOME}/packages/apache-maven-3.2.5/bin/mvn ${REPOSITORY_HOME}/bin/mvn
+  
+#
+# extra extentions
+#
+# https://github.com/discoverygarden/dgi_gsearch_extensions
+cd $SRC_DIR
+git clone https://github.com/discoverygarden/dgi_gsearch_extensions.git
+cd dgi_gsearch_extensions
+${REPOSITORY_HOME}/bin/mvn package
+chown -R $FEDORA_USER:$FEDORA_USER .
+cp target/gsearch_extensions-0.1.1-jar-with-dependencies.jar $CATALINA_HOME/webapps/fedoragsearch/WEB-INF/lib
+#
+# modify the gsearch files.. they have hardcoded /usr/local/fedora but we're installing in /opt/fedora
+#
+sed -i "s|\/usr\/local\/fedora|${FEDORA_HOME}|g" ${CATALINA_HOME}/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/foxmlToSolr.xslt  
+sed -i "s|\/usr\/local\/fedora|${FEDORA_HOME}|g" ${CATALINA_HOME}/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/slurp_all_MODS_to_solr.xslt

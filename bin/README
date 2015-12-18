@@ -1,0 +1,12 @@
+This is the bin directory. 
+
+If you allow login's for the fedora user this user can run these scripts as:
+start_fedora
+stop_fedora
+
+${REPOSITORY_HOME}/bin is how it's referenced and is already included in the environment
+setup. So anything put in here and made executable will be able to be called without
+using the full path to them. 
+
+Also binaries that are compiled from software_dependancies.install are linked to this 
+directory. 
