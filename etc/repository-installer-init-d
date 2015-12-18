@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# fedora-installer This will install initial software for a fedora commons 3.8.1 server
+# repository-installer This will install initial software for a fedora commons 3.8.1 server
 # 
 # chkconfig: 2345 9 20
 # description: do things on firstboot to setup the server
@@ -16,8 +16,8 @@ install-software()
 start()
 {
         cd /opt;
-        git clone https://github.com/slymedia/fedora-repository.git;
-        chkconfig slymedia-installer off;
+        git clone https://github.com/dhinitiative/fedora-repository.git;
+        chkconfig repository-installer off;
     return 0;
 }
 
