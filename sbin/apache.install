@@ -18,7 +18,8 @@ yum -y install httpd php php-pdo php-gd php-mbstring php-xml php-mysql
 #
 # Make sure it's off
 #
-service httpd stop
+#service httpd stop
+systemctl stop httpd
 
 #
 # change /etc/http.d/conf/httpd.conf
@@ -40,5 +41,7 @@ cp ../etc/apache.conf /etc/httpd/conf.d/$SERVER_NAME.conf
 #
 # start httpd
 #
-chkconfig httpd on
-service httpd start
+#chkconfig httpd on
+#service httpd start
+systemctl enable httpd
+systemctl start httpd
