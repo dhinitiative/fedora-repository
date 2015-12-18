@@ -65,7 +65,7 @@ do-install()
     #
         chmod 755 /opt/fedora-repository/installer.sh
     cd /opt/fedora-repository
-        ./installer.sh >/opt/fedora-repository/installation.log 2>&1
+        ./installer.sh >/opt/fedora-repository/installation.log 2>&1 &
 }
 
 case "$1" in
