@@ -10,8 +10,6 @@ SERVER DETAILS
 ---------------------------------------------------
 SERVER NAME: 			$SERVER_NAME
 SERVER FULL NAME:		$SERVER_FULL_NAME
-ADMINISTRATOR USER:  root
-ADMINISTRATOR PASS:  **********   (Please get this password from the product details in the Sly Media Networks support system https://slymedia.net/support)
 ADMINISTRATOR EMAIL:		$ADMIN_EMAIL  (All mail for root is configured to forward to this address. Edit /etc/aliases and run the 'newaliases' command to change it)
 IP ADDRESS:			$IP_ADDR
 
@@ -81,7 +79,4 @@ A log of the installation process is located at: $INSTALL_LOG
 
 
 ***Please save this information for your records***
-
-Thank you for doing business with Sly Media Networks, LLC. 
-If you run into any issues or need help please contact our support staff.  ( https://slymedia.net/contact )
 
