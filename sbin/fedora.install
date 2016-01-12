@@ -11,6 +11,13 @@
 . ../etc/database.sh
 
 #
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#START FEDORA" in the log file 
+#
+echo ""
+echo "#START FEDORA INSTALL#"
+echo ""
+#
 # Variables for script
 #
 install_properties_file="install.properties-fedora"
@@ -180,3 +187,10 @@ chown -R $FEDORA_USER:$FEDORA_USER $FEDORA_HOME
 #
 service fedora start
 sleep 300
+#
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#END FEDORA" in the log file 
+#
+echo ""
+echo "#END FEDORA INSTALL#"
+echo ""
