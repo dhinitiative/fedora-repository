@@ -9,7 +9,13 @@
 # Source environment
 . ../etc/env.sh
 . ../etc/database.sh
-
+#
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#START MYSQL" in the log file 
+#
+echo ""
+echo "#START MYSQL INSTALL#"
+echo ""
 #
 # install packages
 #
@@ -51,4 +57,10 @@ echo "and then remove this reminder from /etc/motd" >> /etc/motd
 # Install EPEL phpMyAdmin via yum
 #
 yum install -y phpMyAdmin
-
+#
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#END MYSQL" in the log file 
+#
+echo ""
+echo "#END MYSQL INSTALL#"
+echo ""
