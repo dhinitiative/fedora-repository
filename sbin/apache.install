@@ -11,6 +11,13 @@
 . ../etc/database.sh
 
 #
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#START HTTP" in the log file 
+#
+echo ""
+echo "#BEGIN HTTP INSTALL#"
+echo ""
+#
 # install apache
 #
 yum -y install httpd php php-pdo php-gd php-mbstring php-xml php-mysql
@@ -44,3 +51,11 @@ cp ../etc/apache.conf /etc/httpd/conf.d/$SERVER_NAME.conf
 #service httpd start
 systemctl enable httpd
 systemctl start httpd
+
+#
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#END HTTP" in the log file 
+#
+echo ""
+echo "#END HTTP INSTALL#"
+echo ""
