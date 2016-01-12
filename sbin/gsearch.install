@@ -22,7 +22,8 @@ if [ $GSEARCH_VERSION == "2.6" ]; then
   #
   # install fedora gsearch 2.6
   #
-  wget -N -P $SRC_DIR  http://downloads.sourceforge.net/fedora-commons/fedoragsearch-2.6.zip
+  #wget -N -P $SRC_DIR  http://downloads.sourceforge.net/fedora-commons/fedoragsearch-2.6.zip
+  wget -N -P $SRC_DIR http://downloads.sourceforge.net/project/fedora-commons/services/3.6/fedoragsearch-2.6.zip
   cd $SRC_DIR
   unzip fedoragsearch-2.6.zip
   chown -R $FEDORA_USER:$FEDORA_USER fedoragsearch-2.6
