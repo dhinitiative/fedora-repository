@@ -29,6 +29,13 @@ if [ $GSEARCH_VERSION == "2.6" ]; then
   chown -R $FEDORA_USER:$FEDORA_USER fedoragsearch-2.6
   cp fedoragsearch-2.6/fedoragsearch.war ${FEDORA_HOME}/tomcat/webapps/
   sleep 300   # wait for war file to load in tomcat
+elseif [ $GSEARCH_VERSION == "2.8" ]; then
+  wget -N -P $SRC_DIRhttp://downloads.sourceforge.net/project/fedora-commons/services/3.7/fedoragsearch-2.8.zip
+  cd $SRC_DIR
+  unzip fedoragsearch-2.8.zip
+  chown -R $FEDORA_USER:$FEDORA_USER fedoragsearch-2.8
+  cp fedoragsearch-2.8/fedoragsearch.war ${FEDORA_HOME}/tomcat/webapps/
+  sleep 300   # wait for war file to load in tomcat
 fi
 
 #
