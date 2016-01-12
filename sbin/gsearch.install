@@ -51,6 +51,11 @@ sed -i "s|localhost|$SERVER_FULL_NAME|g" ../etc/fgsconfig-basic.properties-$GSEA
 chown $FEDORA_USER:$FEDORA_USER ../etc/fgsconfig-basic.properties-$GSEARCH_VERSION
 cp ../etc/fgsconfig-basic.properties-$GSEARCH_VERSION $FEDORA_HOME/tomcat/webapps/fedoragsearch/FgsConfig/fgsconfig-basic.properties
 #
+# modify the gsearch files.. they have hardcoded /usr/local/fedora but we're installing in /opt/fedora-repository
+#
+sed -i "s|\/usr\/local\/fedora|${FEDORA_HOME}|g" ${CATALINA_HOME}/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/foxmlToSolr.xslt  
+sed -i "s|\/usr\/local\/fedora|${FEDORA_HOME}|g" ${CATALINA_HOME}/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/slurp_all_MODS_to_solr.xslt
+#
 # build config
 #
 cd $FEDORA_HOME/tomcat/webapps/fedoragsearch/FgsConfig/
@@ -97,8 +102,3 @@ cd dgi_gsearch_extensions
 ${REPOSITORY_HOME}/bin/mvn package
 chown -R $FEDORA_USER:$FEDORA_USER .
 cp target/gsearch_extensions-0.1.1-jar-with-dependencies.jar $CATALINA_HOME/webapps/fedoragsearch/WEB-INF/lib
-#
-# modify the gsearch files.. they have hardcoded /usr/local/fedora but we're installing in /opt/fedora
-#
-sed -i "s|\/usr\/local\/fedora|${FEDORA_HOME}|g" ${CATALINA_HOME}/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/foxmlToSolr.xslt  
-sed -i "s|\/usr\/local\/fedora|${FEDORA_HOME}|g" ${CATALINA_HOME}/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/slurp_all_MODS_to_solr.xslt
