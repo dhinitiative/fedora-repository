@@ -10,7 +10,7 @@
 . ../etc/env.sh
 . ../etc/database.sh
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository.
 # Search "#START MYSQL" in the log file 
 #
 echo ""
@@ -58,7 +58,7 @@ echo "and then remove this reminder from /etc/motd" >> /etc/motd
 #
 yum install -y phpMyAdmin
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository.
 # Search "#END MYSQL" in the log file 
 #
 echo ""
