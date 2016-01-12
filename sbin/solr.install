@@ -5,6 +5,14 @@
 . ../etc/env.sh
 . ../etc/database.sh
 
+#
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#START SOLR" in the log file 
+#
+echo ""
+echo "#START SOLR INSTALL#"
+echo ""
+
 if [ $SOLR_VERSION == "4.2.0" ]; then
   #
   # stop fedora 
@@ -96,3 +104,11 @@ fi
 mv $CATALINA_HOME/webapps/solr/WEB-INF/classes/log4j.properties $CATALINA_HOME/webapps/solr/WEB-INF/classes/log4j.properties-orig
 mkdir -p $CATALINA_HOME/webapps/solr/WEB-INF/classes
 cp ../etc/log4j.properties-solr $CATALINA_HOME/webapps/solr/WEB-INF/classes/log4j.properties
+
+#
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#END SOLR" in the log file 
+#
+echo ""
+echo "#END SOLR INSTALL#"
+echo ""
