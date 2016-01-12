@@ -155,7 +155,7 @@ chkconfig portreserve off
 # Send email to let root (ADMIN_EMAIL) know it's complete
 #
 envsubst < "$REPOSITORY_HOME/etc/install-complete-email.txt" > "$REPOSITORY_HOME/installation-details.txt"
-cat $REPOSITORY_HOME/installation-details.txt | mail -s "Your FEDORA COMMONS server ($SERVER_FULL_NAME)" $ADMIN_EMAIL
+cat $REPOSITORY_HOME/installation-details.txt | mail -s "Your FEDORA COMMONS server installation details for $SERVER_FULL_NAME" $ADMIN_EMAIL
 sleep 60      # make sure it gets sent before reboot
 echo "Installation completed in $SECONDS seconds"
 reboot
