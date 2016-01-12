@@ -6,7 +6,7 @@
 . ../etc/database.sh
 
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository. 
 # Search "#START SOLR" in the log file 
 #
 echo ""
@@ -106,7 +106,7 @@ mkdir -p $CATALINA_HOME/webapps/solr/WEB-INF/classes
 cp ../etc/log4j.properties-solr $CATALINA_HOME/webapps/solr/WEB-INF/classes/log4j.properties
 
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository.
 # Search "#END SOLR" in the log file 
 #
 echo ""
