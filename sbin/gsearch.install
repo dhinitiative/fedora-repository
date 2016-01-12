@@ -11,7 +11,7 @@
 . ../etc/database.sh
 
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository.
 # Search "#START GSEARCH" in the log file 
 #
 echo ""
@@ -112,7 +112,7 @@ chown -R $FEDORA_USER:$FEDORA_USER .
 cp target/gsearch_extensions-0.1.1-jar-with-dependencies.jar $CATALINA_HOME/webapps/fedoragsearch/WEB-INF/lib
 
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository.
 # Search "#END GSEARCH" in the log file 
 #
 echo ""
