@@ -7,7 +7,7 @@
 . ../etc/env.sh
 
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository. 
 # Search "#START DJATOKA" in the log file 
 #
 echo ""
@@ -61,7 +61,7 @@ if [ $DJATOKA_VERSION == "adore" ]; then
 fi
 
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository. 
 # Search "#END DJATOKA" in the log file 
 #
 echo ""
