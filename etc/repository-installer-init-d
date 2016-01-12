@@ -5,6 +5,8 @@
 # chkconfig: 2345 9 20
 # description: do things on firstboot to setup the server
 
+# Fail if one of the functions fail.
+set -e
 randpw ()
 {
     date +%s | sha256sum | base64 | head -c 7 ; echo
