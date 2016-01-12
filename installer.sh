@@ -28,9 +28,9 @@ export IP_ADDR=`hostname -i`                        # IP address of this server 
 #
 # Software versions
 #
-export FEDORA_VERSION="3.8"                             # Valid versions 3.5 and 3.8
-export SOLR_VERSION="4.2.0"                             # Valid versions 3.6.2 and 4.2.0
-export GSEARCH_VERSION="2.6"	                        # Valid versions 2.4.2 and 2.6
+export FEDORA_VERSION="3.8"                             # Valid versions: 3.8
+export SOLR_VERSION="4.2.0"                             # Valid versions: 4.2.0
+export GSEARCH_VERSION="2.6"	                        # Valid versions: 2.6
 export DJATOKA_VERSION="adore"                          # Valid versions adore
 #
 ## Variables to be passed to env.sh
