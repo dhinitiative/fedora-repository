@@ -11,7 +11,7 @@
 . ../etc/database.sh
 
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository.
 # Search "#START FEDORA" in the log file 
 #
 echo ""
@@ -188,7 +188,7 @@ chown -R $FEDORA_USER:$FEDORA_USER $FEDORA_HOME
 service fedora start
 sleep 300
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository.
 # Search "#END FEDORA" in the log file 
 #
 echo ""
