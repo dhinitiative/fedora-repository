@@ -11,7 +11,7 @@
 . ../etc/database.sh
 
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository. 
 # Search "#START HTTP" in the log file 
 #
 echo ""
@@ -53,7 +53,7 @@ systemctl enable httpd
 systemctl start httpd
 
 #
-# debugging search strings for parsing installation_post.log created in root's home. 
+# debugging search strings for parsing installation.log created in /opt/fedora-repository. 
 # Search "#END HTTP" in the log file 
 #
 echo ""
