@@ -9,10 +9,7 @@ randpw ()
 {
     date +%s | sha256sum | base64 | head -c 7 ; echo
 }
-install-software()
-{
-    yum -y install git gettext sendmail
-}
+
 start()
 {
         cd /opt;
@@ -27,6 +24,7 @@ start()
             chkconfig repository-intstaller off
             exit 1;
         else
+        yum -y install git gettext sendmail
         git clone https://github.com/dhinitiative/fedora-repository.git;
         chkconfig repository-installer off;
         fi
@@ -83,7 +81,6 @@ do-install()
 case "$1" in
   start)
         echo $"Installing fedora-repository software in /opt.... "
-    install-software
     start
     configure-email
     create-fuser-password
