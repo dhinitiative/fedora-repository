@@ -17,6 +17,15 @@
 echo ""
 echo "#BEGIN HTTP INSTALL#"
 echo ""
+
+#
+# In CentOS if you use outside authentication (ie. LDAP) when apache installs
+# it doesn't create the apache group. Thus apache doesn't start up properly.
+# So let's fix that...
+#
+if [ "$(grep -c apache /etc/group)" -eq 0 ]; then
+   echo "apache:x:48:" >> /etc/group
+fi
 #
 # install apache
 #
