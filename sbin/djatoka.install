@@ -6,6 +6,14 @@
 # Source environment
 . ../etc/env.sh
 
+#
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#START DJATOKA" in the log file 
+#
+echo ""
+echo "#START DJATOKA INSTALL#"
+echo ""
+
 if [ $DJATOKA_VERSION == "adore" ]; then
   #
   # Make sure fedora is started
@@ -51,3 +59,11 @@ if [ $DJATOKA_VERSION == "adore" ]; then
   mv $REPOSITORY_PKGS/adore-djatoka-1.1/bin/env.sh $REPOSITORY_PKGS/adore-djatoka-1.1/bin/env.sh-orig
   cp $REPOSITORY_HOME/etc/adore-djatoka-env.sh $REPOSITORY_PKGS/adore-djatoka-1.1/bin/env.sh
 fi
+
+#
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#END DJATOKA" in the log file 
+#
+echo ""
+echo "#END DJATOKA INSTALL#"
+echo ""
