@@ -10,6 +10,14 @@
 . ../etc/env.sh
 . ../etc/database.sh
 
+#
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#START GSEARCH" in the log file 
+#
+echo ""
+echo "#START GSEARCH INSTALL#"
+echo ""
+
 if [ $GSEARCH_VERSION == "2.6" ]; then
   #
   # install fedora gsearch 2.6
@@ -102,3 +110,11 @@ cd dgi_gsearch_extensions
 ${REPOSITORY_HOME}/bin/mvn package
 chown -R $FEDORA_USER:$FEDORA_USER .
 cp target/gsearch_extensions-0.1.1-jar-with-dependencies.jar $CATALINA_HOME/webapps/fedoragsearch/WEB-INF/lib
+
+#
+# debugging search strings for parsing installation_post.log created in root's home. 
+# Search "#END GSEARCH" in the log file 
+#
+echo ""
+echo "#END GSEARCH INSTALL#"
+echo ""
