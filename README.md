@@ -1,5 +1,43 @@
 # fedora-repository
-Process to build an Islandora ready (not included) fedora commons server on a CentOS 7 host. 
+Process to build an Islandora ready (not included) fedora commons server on a CentOS 7 host.
+
+### Welcome to the Fedora Repository Server Installer.
+This project is for installing [fedora commons](http://fedora-commons.org) on a CentOS 7 based server that's configured ready to be used with any web based site (not included in installation). It's specifically designed and tested to be used with a Drupal based Islandora installation although, Islandora isn't a requirement. Other web front ends that can interface with a fedora based server could work. 
+
+### What's installed
+
+#### Fedora Commons 3.8.1
+
+Fedora Commons is the database server for managing Digital Collections. While you can browse objects directly within Fedora it's generally used for a backend storage configured against a web front end for presenting the objects (ie. Drupal and Islandora.)
+
+#### Solr 4.2.2
+
+Solr is the indexing service that's installed with Fedora Commons to be able to index objects in a collection and present those results when asked for in database searches. 
+
+#### Fedora GSearch 2.6
+
+Fedora Gsearch is another aspect of the fedora server that provides an interface to allow one to search through a fedora database. It works with solr to produce indexed lists of digital objects that are searched. 
+
+#### Adore Djatoka 1.1
+
+djatoka is open source Java software that builds upon a rich set of APIs and libraries to provide a service framework for the dynamic dissemination of JPEG 2000 image files. (http://sourceforge.net/projects/djatoka/)
+
+#### MySQL 5
+
+" MySQL is a freely available open source Relational Database Management System (RDBMS) that uses Structured Query Language (SQL). SQL is the most popular language for adding, accessing and managing content in a database. It is most noted for its quick processing, proven reliability, ease and flexibility of use." (Google Search)
+
+#### Apache 2
+
+ Apache is a freely available Web server that is distributed under an "open source" license. Version 2.0 runs on most UNIX-based operating systems (such as Linux, Solaris, Digital UNIX, and AIX), on other UNIX/POSIX-derived systems (such as Rhapsody, BeOS, and BS2000/OSD), on AmigaOS, and on Windows 2000. (Google Search)
+
+#### Saxon 9.5
+
+The Saxon package is a collection of tools for processing XML documents. 
+http://sourceforge.net/projects/saxon/
+
+### How to Get it
+
+Just go to the "View on github" link and browse the README.md for more information on how to use it. 
 
 The installation process is fairly simple. 
 
@@ -11,7 +49,7 @@ Notes:
    - an /opt/fedora-repository directory will be created as the installation base.
    - generates the user accounts and creates strong random passwords for the accounts which is emailed to the admin at the end. 
 
-Installation (quick):
+<h1>Installation (quick):</h1>
 
 In order to simplify the installation process we created an init.d service that you can load on the machine to do the installation for you. 
 
