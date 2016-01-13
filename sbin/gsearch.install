@@ -73,6 +73,11 @@ cp ../etc/fgsconfig-basic.properties-$GSEARCH_VERSION $FEDORA_HOME/tomcat/webapp
 #
 # modify the gsearch files.. they have hardcoded /usr/local/fedora but we're installing in /opt/fedora-repository
 #
+# helpful to find the files
+# (find /opt/fedora-repository/fedora/tomcat/webapps/fedoragsearch/FgsConfig -type f -exec grep '/usr/local/fedora' {} -ls \;)
+# and here's how to change them in all the files.
+# (find /opt/fedora-repository/fedora/tomcat/webapps/fedoragsearch/FgsConfig -type f -exec sed -i 's|/usr/local/fedora|/opt/fedora-repository|g' {} \;)
+#
 sed -i "s|\/usr\/local\/fedora|${FEDORA_HOME}|g" ${CATALINA_HOME}/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/foxmlToSolr.xslt  
 sed -i "s|\/usr\/local\/fedora|${FEDORA_HOME}|g" ${CATALINA_HOME}/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/DC_to_solr.xslt
 sed -i "s|\/usr\/local\/fedora|${FEDORA_HOME}|g" ${CATALINA_HOME}/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/slurp_all_MODS_to_solr.xslt
