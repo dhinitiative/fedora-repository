@@ -32,9 +32,9 @@ it should read something like this:
 				
 Then run the following commands:
     			
-    	% mv repository-installer-init-d repository-installer
-	% chmod 755 /etc/init.d/repository-installer
-	% chkconfig --add repository-installer
+    % mv repository-installer-init-d repository-installer
+    % chmod 755 /etc/init.d/repository-installer
+    % chkconfig --add repository-installer
   
 Now you have a repository-installer service on the machine.
    
