@@ -9,6 +9,7 @@ Requirements:
 
 Notes: 
    - an /opt/fedora-repository directory will be created as the installation base.
+   - generates the user accounts and creates strong random passwords for the accounts which is emailed to the admin at the end. 
 
 Installation (quick):
 
@@ -53,7 +54,15 @@ Now you have a repository-installer service on the machine.
 
 If it's off turn it on with ( chkconfig repository-installer on ) alternatively to turn it off ( chkconfig repository-installer off )
 
-By enabling this service it will automatically build the fedora server the next reboot. So reboot your machine and sit back and wait up to an hour for the installation to complete. At the end of the process all the login details will be emailed to the root account specified in the instructions above. 
+By enabling this service it will automatically build the fedora server the next reboot. So reboot your machine and sit back and wait up to an hour for the installation to complete. At the end of the process all the login details will be emailed to the root account specified in the instructions above. Also note that it WILL NOT build over an already installed server. If the installation detects /opt/feodra-repository it stops the install and disables the service so it won't keep running on reboots. 
+
+
+
+On a production server you should remove the installer service. 
+
+	% rm /etc/init.d/repository-installer
+
+
 
 	That's it!
 
