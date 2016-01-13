@@ -110,7 +110,7 @@ You can also log back in after the reboot and do:
 
 You can watch the install process as it works along building the installation. 
 
-Installation (manually):
+<h1>Installation (manually):</h1>
 
     Install needed software:
         % yum -y install git gettext sendmail
