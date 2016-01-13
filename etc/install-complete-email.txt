@@ -12,6 +12,7 @@ SERVER NAME: 			$SERVER_NAME
 SERVER FULL NAME:		$SERVER_FULL_NAME
 ADMINISTRATOR EMAIL:		$ADMIN_EMAIL  (All mail for root is configured to forward to this address. Edit /etc/aliases and run the 'newaliases' command to change it)
 IP ADDRESS:			$IP_ADDR
+Operating System:  `cat /etc/redhat-release`
 
 
 SOFTWARE DETAILS
