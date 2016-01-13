@@ -22,6 +22,7 @@ This automates the manual installation process that is shown further below.
 modify the repository-installer-init-d script for your email address for root's mail and to notify you:
 	
 edit the line: 
+
 	sed -i "s|youremail@domain.com|<REPLACE WITH YOUR EMAIL>|g" /opt/fedora-repository/installer.sh
 			
 change the <REPLACE WITH YOUR EMAIL> to your real email address or the address where all mail for the box should go.
