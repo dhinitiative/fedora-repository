@@ -5,6 +5,8 @@
 PUBLIC_SITE=$1
 #
 # Give one argument of the public server to get and add the certificate from
+# it's just the hostname not the URL.. so from https://player.vimeo.com you need to run
+# ./add-truststore-cert.sh player.vimeo.com
 #
 
 cd $FEDORA_HOME/server
