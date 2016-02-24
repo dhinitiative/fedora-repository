@@ -1,0 +1,9 @@
+/opt/fedora-repository/fedora/tomcat/logs/catalina.-* /opt/fedora-repository/fedora/tomcat/logs/host-manager.-* /opt/fedora-repository/fedora/tomcat/logs/localhost.-* /opt/fedora-repository/fedora/tomcat/logs/localhost_access_log.-* /opt/fedora-repository/fedora/tomcat/logs/manager.-* {
+    weekly
+    missingok
+    notifempty
+    sharedscripts
+    rotate 2
+    compress
+    endscript
+}
