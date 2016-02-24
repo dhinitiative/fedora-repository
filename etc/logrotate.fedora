@@ -1,0 +1,9 @@
+/opt/fedora-repository/fedora/server/logs/fedoragsearch.daily.log.-* {
+    weekly
+    missingok
+    notifempty
+    sharedscripts
+    rotate 2
+    compress
+    endscript
+}
